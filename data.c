@@ -15,7 +15,7 @@
 //     printf(" 번호 입력(번호 입력후 엔터를 눌러주세요!) > ");
 // }
 
-void bubble(){
+// void bubble(){
 //총 n(25번 실행)
 //     int temp;
 //     for(i=1; i<n; i++)
@@ -32,7 +32,7 @@ void bubble(){
 //             }
 //         }
 //     }
-}
+// }
 
 // void numCh(a){
 //     switch (a)
@@ -75,32 +75,32 @@ void bubble(){
 //     return 0;
 // }
 
-//버블 정렬 codeup
-// #include <stdio.h>
-// int a[10001];
-// int n, i, j, temp;
-// int main() {
-//     scanf("%d", &n);
-//     for (i=1; i<=n; i++)
-//         scanf("%d", &a[i]);
+// 버블 정렬 codeup
+#include <stdio.h>
+int a[10001];
+int n, i, j, temp;
+int main() {
+    scanf("%d", &n);
+    for (i=1; i<=n; i++)
+        scanf("%d", &a[i]);
 
-//     //총 n(25번 실행)
-//     for(i=1; i<n; i++)
-//     {
-//         //만약 j의 앞에있는 값이 클 경우에 값을 바꿈
-//         for(j=1;j<n;j++)
-//         {
-//             //클 경우(작은 경우로 바꾸면 내림차순으로 바뀜)
-//             if (a[j] > a[j+1])
-//             {
-//                 temp = a[j];
-//                 a[j] = a[j+1];
-//                 a[j+1] = temp;
-//             }
-//         }
-//     }
+    //총 n(25번 실행)
+    for(i=1; i<n; i++)
+    {
+        //만약 j의 앞에있는 값이 클 경우에 값을 바꿈
+        for(j=1;j<n;j++)
+        {
+            //클 경우(작은 경우로 바꾸면 내림차순으로 바뀜)
+            if (a[j] > a[j+1])
+            {
+                temp = a[j];
+                a[j] = a[j+1];
+                a[j+1] = temp;
+            }
+        }
+    }
 
-//     for (i = 1; i <= n; i++)
-//         printf("%d\n", a[i]);
-//     return 0;
-// }
+    for (i = 1; i <= n; i++)
+        printf("%d\n", a[i]);
+    return 0;
+}
