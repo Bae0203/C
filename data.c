@@ -1,21 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+//힘들었던 수행, 그만큼 보람있고 집중도 빡세게 한 수행
 
 int array[25] = {0};
+int closeCh = 0, easterEgg = 0;    //0 : 종료 ㄴㄴ, 1 : 종료, 2 : 아님
 
 //테스트용
 // int array[25] = {5, 4, 60, 3, 50, 22, 0, 32, 21, 56, 1, 4, 59, 69, 55, 75, 15, 67, 74, 96, 3, 52, 45, 67, 89};
 //필수로 들어가야 될것들 ==================================================================
 void setRandomArray(){
-    printf("\n\n==\n\n");
-    srand((unsigned)time(NULL));
+    srand((unsigned)time(NULL));    //이거 시간에 따라 달라집니다
     for(int i= 0;i<25;i++){
         int random = rand()%100;
         array[i] = random;
-        printf("%d ", array[i]);
     }
-    printf("\n\n==\n\n");
     
 }
 
@@ -38,7 +37,6 @@ void startline(){
 //성공 버블 정렬 
 void bubble(){
 // 총 n(25번 실행)
-    printf("\n\n===bubble===\n\n");
     int temp;
     for(int i=0; i<25; i++)
     {
@@ -59,7 +57,6 @@ void bubble(){
 
 //성공 선택 정렬
 void select(){
-    printf("\n\n===select===\n\n");
     int temp, least;    //바꿀값과 제일 작은 값의 index를 저장할 값
     for(int i=0;i<24;i++){
         least = i;      //일단 초기값을 i(제일 처음 값)으로 줘서 0~25까지 한번씩 다 훑음
@@ -74,7 +71,6 @@ void select(){
 
 //성공 삽입 정렬
 void insert(){
-    printf("\n\n===insert===\n\n");
     int temp, j;
     //얘가 신기한게 굳이 제일 작은걸 차례대로 찾으러 다니고
     //그걸또 맨앞으로 옮겨주는 작업을 해야되기때문에 매우 골치가 아픔(뭔 말인지 모르겠으면 학습지 참고)
@@ -133,7 +129,6 @@ void quick(){
 
     //학습지 코드보니까 재귀 써야되네
     //ㅜㅜ
-    printf("\n\n===quick===\n\n");
     int L = 0, R = 25;
     quick_sort(L, R);
     
@@ -178,43 +173,132 @@ int Merge(left, right){
         Merge_sort(left, right, mid); //합치기
     }
 }
-// void numCh(a){
-//     switch (a)
-//     {
-//     case 1:
-//         printf("선택\n\n");
-//         break;
-//     case 2:
-//         printf("삽입\n\n");
-//         break;
-//     case 3:
-//         printf("버블\n\n");
-//         break;
-//     case 4:
-//         printf("퀵\n\n");
-//         break;
-//     case 5:
-//         printf("합병\n\n");
-//         break;
-//     case 6:
-//         printf("힙\n\n");
-//         break;
-//     case 7:
-//         printf("종료\n\n");
-//         break;
-//     default:
-//         printf("ㄴㄴ 다시\n\n");
-//         break;
-//     }
-// }
+
+
+//성곤 힙 정렬
+//민성이의 힙한 트리 정렬
+// 그냥 최대힙 만들고 거기서 하나하나 빼면(최댓값이 빼지겠죠????)
+// 자연스럽게 오름차순 이 되는데 그걸 내림차순으로 하면 됨(25 -> 0 이 되게)
+int h[26] = {0};    //얘도 따로 저장해둘 공간이 필요함( 힙트리 생성(따로 저장)후 하나하나씩 값을 삭제하면서 return하며 값을 빼 array에 저장 )
+
+int insert_heap_tree(int item, int heap_index){
+    int i = heap_index;
+    while ((i != 1) && (item > h[i/2])){
+        h[i] = h[i/2];  //부모 값을 자식 값으로 바꿈
+        i/=2;   //계속 / 2를 하다보면 1이 나와서 1에 item을 넣는다( 왜 i/2를 하는지 모르면 시험지에 힙한 트리 그리면 된다. 학습지에 나온다(부모 선택할려고) )
+    }
+    h[i] = item;        //item을 넣는 모습
+    //자동으로 꽉찬 최대 힙트리가 되겠죠????
+}
+
+int delete_heap_tree(int heap_index){
+    int parent, child, item, temp;  //부모, 자식, 현재 가장 큰 값, 가장 마지막 주소
+    item = h[1]; // 가장 큰 값
+    temp = heap_index;  //가장 마지막 값
+    parent = 1; child = 2;
+    while (child <= heap_index){
+        if((child < heap_index) && (h[child] < h[child+1]))
+            child++;//자식중에 더 큰값을 선택( 큰값을 올려야 오름차순, 내림차순이 되니 더 큰 값을 선택 )
+        if(temp >= h[child]) break;
+        h[parent] = h[child];
+        parent = child; //아래 단계로 이동
+        child *= 2;     //아래 단계로 이동
+    }
+    h[parent] = temp;
+    return item;
+}
+
+void heap(){
+    int i, heap_index = 0;
+    //최대힙 만들기 ( 힙트리 학습지 보면 이해 바로됨 )
+    for(i = 0; i < 25; i++){
+        heap_index++;
+        insert_heap_tree(array[i], heap_index);
+    }
+    //하나씩 값을 빼서 실제 배열에 넣어주는 함수
+    for(i =24; i>=0; i--){
+        array[i] = delete_heap_tree(heap_index);
+        heap_index--;
+    }
+}
+
+void sort_before(){
+    printf("정렬하기 전 배열 값 : ");
+        for(int i=0;i<25;i++){
+            printf("%d ",array[i]);
+    }printf("\n\n");
+}
+
+void numCh(a){
+    switch (a)
+    {
+    case 1:
+        printf("  << '선택 정렬'을 선택하셨습니다. >>\n\n");
+        sort_before();
+        select();
+        break;
+    case 2:
+        printf("  << '삽입 정렬'을 선택하셨습니다. >>\n\n");
+        sort_before();
+        insert();
+        break;
+    case 3:
+        printf("  << '버블 정렬'을 선택하셨습니다. >>\n\n");
+        sort_before();
+        bubble();
+        break;
+    case 4:
+        printf("  << '퀵 정렬'을 선택하셨습니다. >>\n\n");
+        sort_before();
+        quick();
+        break;
+    case 5:
+        printf("  << '합병 정렬'을 선택하셨습니다. >>\n\n");
+        sort_before();
+        Merge(0, 24);
+        break;
+    case 6:
+        printf("  << '힙 정렬'을 선택하셨습니다. >>\n\n");
+        sort_before();
+        heap();
+        break;
+    case 7:
+        printf("종료\n\n");
+        closeCh = 1;
+        break;
+    default:
+        printf("ㄴㄴ 다시\n\n");
+        easterEgg++;
+        if(easterEgg == 10)
+            printf("우리 애가 아파해요\n\n");
+        else if(easterEgg == 20)
+            printf("어어 \n\n");
+        else if(easterEgg == 25)
+            printf("안된다 \n\n");
+        else if(easterEgg == 30){
+            printf("펑 \n\n");
+            closeCh = 1;
+        }
+        break;
+    }
+}
 
 int main(){
     int a;
     startline();
-    setRandomArray();
-    scanf("%d",&a);
-    printf("\n");
-    /*
+    while(1){
+        setRandomArray();
+        scanf("%d",&a);
+        printf("\n\n");
+        numCh(a);
+        if(closeCh == 1) break;
+        printf("정렬한 뒤 배열 값 : ");
+        for(int i=0;i<25;i++){
+            printf("%d ",array[i]);
+        }
+        printf("\n\n 더 하실 건가요?? > ");
+    }
+    /*//테스트 노가다 한 흔적
     bubble();
     for(int i=0;i<25;i++){
         printf("%d ",array[i]);
@@ -236,10 +320,19 @@ int main(){
     for(int i=0;i<25;i++){
         printf("%d ",array[i]);
     }
+    heap();
+    for(int i=0;i<25;i++){
+        printf("%d ",array[i]);
+    }
     */
     // while(1){
     //     numCh(a);
     // }
-    
+    //수행 평가 하면서 이렇게 고생해본적은 처음이였네요
+    //그만큼 엄청 집중도 되서 좋았던거같아요
+    //새벽 2시까지 달린게 문제지만
+    //거의 11시쯤 부터 2시까지 유튜브도 한번 안보고 노래 들으면서 수행 한게 정말 보람차네요
+    //전 자러가겠습니다
+    //마지막 window 테스트
     return 0;
 }
